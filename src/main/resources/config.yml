@@ -1,0 +1,8 @@
+bindAddress: ''
+port: 8080
+backlog: 128
+path: /
+thread:
+  corePoolSize: 1
+  maxPoolSize: 8
+  keepAliveTime: 300
