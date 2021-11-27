@@ -1,10 +1,11 @@
 plugins {
     java
     id("io.freefair.lombok") version "6.3.0"
+    `maven-publish`
 }
 
 group = "io.heartpattern"
-version = "1.0.0"
+version = "1.0.0-SNAPSHOT"
 
 repositories {
     maven("https://repo.heartpattern.io/repository/maven-public/")
@@ -33,7 +34,7 @@ tasks {
                 description: Lightweight healthcheck framework for paper.
                 website: https://github.com/HeartPattern/square-health-check/
                 author: HeartPattern
-            """.trimIndent()
+                """.trimIndent()
             )
         }
     }
@@ -41,5 +42,36 @@ tasks {
     jar {
         dependsOn("generatePluginYml")
         from(File(buildDir, "plugin.yml"))
+    }
+}
+
+val mavenUsername = properties["maven.username"] as? String
+val mavenPassword = properties["maven.password"] as? String
+
+if (mavenUsername != null && mavenPassword != null) {
+    publishing {
+        repositories {
+            maven(
+                if (project.version.toString().endsWith("SNAPSHOT"))
+                    "https://repo.heartpattern.io/repository/maven-public-snapshots/"
+                else
+                    "https://repo.heartpattern.io/repository/maven-public-releases/"
+            ) {
+                credentials {
+                    username = mavenUsername
+                    password = mavenPassword
+                }
+            }
+        }
+
+        publications {
+            create<MavenPublication>("heartpattern") {
+                artifactId = project.name
+                groupId = project.group.toString()
+                version = project.version.toString()
+
+                from(components["java"])
+            }
+        }
     }
 }
