@@ -17,7 +17,7 @@ dependencies {
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
-0
+
 tasks {
     create("generatePluginYml") {
         doLast {
