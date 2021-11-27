@@ -42,6 +42,7 @@ tasks {
     jar {
         dependsOn("generatePluginYml")
         from(File(buildDir, "plugin.yml"))
+        archiveFileName.set("square-health-check.jar")
     }
 }
 
